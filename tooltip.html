@@ -1,0 +1,162 @@
+<!doctype html>
+<html ng-app="tooltip" ng-controller="ToolTipController">
+	<head>
+		<style>
+			body {
+				background-image: url('https://x20web.corp.google.com/~ddoria/canvas.jpg');
+				background-size: 1172px 600px;
+				background-position: left 200px top;
+				background-repeat: no-repeat;
+				font: 400 13px/22px "Helvetica Neue","HelveticaNeue",Helvetica,sans-serif;
+			}
+			
+			div.tt {
+				display: inline-block;
+				padding: 1em;
+				max-width: 24em;
+				/*max-height: 274px;*/
+				background-color: white;
+				border: 1px solid black;
+				line-height: 1.2em;
+				overflow: hidden;
+				z-index: 1000;
+			}
+
+			div.tt > a {
+				/*pointer-events: none;
+				cursor: default;*/
+				text-decoration: none;
+			}
+
+			.line {
+				position: absolute;
+				left: 200px;
+				height: 170%;
+				border-left: 5px solid black;
+			}
+			
+			form {
+				display: block;
+				top: 9px;
+				left: 9px;
+			}
+
+			textarea {
+				height: 45em;
+				width: 16em;
+			}
+
+			[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+			  display: none !important;
+			}
+
+			textarea, input {
+				border-radius: 3px;
+				resize: none
+			}
+
+			.style-guide {
+				position: absolute;
+				border-top: 5px solid black;
+				width: 1133px;
+				left: 200px;
+				top: 600px;
+				padding-left: 15px;
+			}
+		</style>
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-35618661-2', 'auto');
+		  ga('send', 'pageview');
+		</script>
+	</head>
+	<body>
+		<div class="line"></div>
+
+		<div ng-cloak>
+			<form>
+			  <label for="title"><strong>Title: </strong></label><br>
+			  <input ng-model="title" id="title" type="text"/><br/>
+			  <label for="text"><strong>Enter Tooltip HTML:</strong></label><br>
+			  <textarea id="text" rows="2" name="text" cols="20" aria-hidden="true">{{init}}</textarea><br/>
+			  <button id="generate">Generate HTML</button><br/><br/>
+			  <label for="text2"><strong>Generated HTML Output: </strong></label><br>
+			  <textarea id="text2" rows="2" name="text2" cols="20" aria-hidden="true"></textarea><br/>
+			</form>
+		</div>
+		
+		<div class="tt" draggable ng-cloak id="container"></div>
+		
+		<div class="style-guide">
+			<h3>Quick tool-tip guidelines</h3>
+			<ul>
+				<li><a href="https://sites.google.com/a/google.com/global-editorial-style-guide/content-type/tooltips">Writing tips</a>: Be short (<16 lines, <=3 sections of <=3 sentences each); address specific need; provide usage guidance; include a "next step" link</li>
+				<li><a href="https://sites.google.com/a/google.com/global-editorial-style-guide/html/tooltip-code">gKMS tips</a>: Tooltips should be non-browse, non-search, and start with "TT - "</li>
+				<li>Assign to UI topic: AdWords Help Content  > Tooltips (TT) > [choose appropriate topic]</li>
+			</ul>
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+		<script>
+		angular.module('tooltip', [])
+  		.controller('ToolTipController', ['$scope', function($scope) {
+				$scope.title = 'Drag Me';
+        $scope.text1 = '';
+        $scope.text2 = '';
+		    $scope.link = '';
+		    $scope.init = '<strong>Why it matters: </strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.Duis aute irure dolor in reprehenderit.<br><br>\n\n<strong>Who should use it: </strong>Lorem ipsum dolor<br><br>\n\n<strong>Example: </strong>Lorem ipsum dolor<br><br>\n\n<a href="/adwords/answer/XXX">More about tooltips</a>';
+		  }])
+		  .directive('draggable', ['$document', function($document) {
+    return function(scope, element, attr) {
+      var startX = 0, startY = 0, x = 300, y = -1000;
+
+      element.css({
+       position: 'relative',
+       cursor: 'pointer',
+       left: '300px',
+       top: '-1000px'
+      });
+
+      element.on('mousedown', function(event) {
+        // Prevent default dragging of selected content
+        event.preventDefault();
+        startX = event.pageX - x;
+        startY = event.pageY - y;
+        $document.on('mousemove', mousemove);
+        $document.on('mouseup', mouseup);
+      });
+
+      function mousemove(event) {
+        y = event.pageY - startY;
+        x = event.pageX - startX;
+        element.css({
+          top: y + 'px',
+          left:  x + 'px'
+        });
+      }
+
+      function mouseup() {
+        $document.off('mousemove', mousemove);
+        $document.off('mouseup', mouseup);
+      }
+    };
+  }]);
+		</script>
+		<script>
+			$(document).ready(function($) {
+				$('#container').html('<strong>' + $('#title').val() + '</strong><br><br>' + $('#text').val());
+			});
+			$('#text, #title').keyup(function() {
+	    	$('#container').html('<strong>' + $('#title').val() + '</strong><br><br>' + $('#text').val());
+			});
+			$('#generate').click(function() {
+				$('#text2').val('<strong>' + $('#title').val() + '</strong><br><br>\n\n' + $('#text').val());
+			});
+		</script>
+	</body>
+</html>
