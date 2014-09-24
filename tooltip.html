@@ -14,7 +14,6 @@
 				display: inline-block;
 				padding: 1em;
 				max-width: 24em;
-				/*max-height: 274px;*/
 				background-color: white;
 				border: 1px solid black;
 				line-height: 1.2em;
@@ -106,9 +105,6 @@
 		angular.module('tooltip', [])
   		.controller('ToolTipController', ['$scope', function($scope) {
 				$scope.title = 'Drag Me';
-        $scope.text1 = '';
-        $scope.text2 = '';
-		    $scope.link = '';
 		    $scope.init = '<strong>Why it matters: </strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.Duis aute irure dolor in reprehenderit.<br><br>\n\n<strong>Who should use it: </strong>Lorem ipsum dolor<br><br>\n\n<strong>Example: </strong>Lorem ipsum dolor<br><br>\n\n<a href="/adwords/answer/XXX">More about tooltips</a>';
 		  }])
 		  .directive('draggable', ['$document', function($document) {
